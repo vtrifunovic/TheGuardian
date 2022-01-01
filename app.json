@@ -1,0 +1,10 @@
+{
+  "name": "SeniorDesignCPR",
+  "displayName": "SeniorDesignCPR",
+  "android": {
+    "package": "com.SeniorDesignCPR"
+  },
+  "ios": {
+    "bundleIdentifier": "com.SeniorDesignCPR"
+  }
+}

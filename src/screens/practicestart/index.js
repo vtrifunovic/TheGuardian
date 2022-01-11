@@ -1,14 +1,56 @@
 import React, { useState, useEffect } from 'react';
-import { ImageBackground, Pressable, Text, TouchableOpacity, View } from 'react-native';
+import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
 import styles from './styles';
 import { useNavigation } from '@react-navigation/native';
+import { Audio } from 'expo-av';
 
 var clicks = 1;
+var playing_metronome = false;
+var playing_song = false;
 
-const TrainingMenu = () => {  
+const source1 = require('./2077.mp3');
+const source2 = require('./metronome.mp3');
+var xsound = undefined;
+var ysound = undefined;
 
-  const navigation = useNavigation();
+const TrainingMenu = ({route, navigation}) => {  
+  
+  var {tgl1, tgl2} = route.params;
+  const [sound, setSound] = React.useState();
+
+  async function playSound(state, file) {
+    if (state) {
+      try {
+        if (file == source1){
+          await ysound.stopAsync();
+          await ysound.unloadAsync();
+          playing_song = false;
+        } else {
+          await xsound.stopAsync();
+          await xsound.unloadAsync();
+          playing_metronome = false;
+        }
+      } catch (e) {
+        console.warn(e);
+      }
+    } else {
+      try{
+        const {sound} = await Audio.Sound.createAsync(file, {downloadFirst:true});
+        setSound(sound);
+        await sound.playAsync();
+        if (file == source1){
+          ysound = sound
+        } else {
+          xsound = sound;
+        }
+      } catch (e) {
+        console.warn(e)
+      }
+    }
+  }
+
+  //const navigation = useNavigation();
 
     const [data, setData] = useState({
         x: 0,
@@ -48,6 +90,31 @@ const TrainingMenu = () => {
     }, []);
 
     const { x, y, z } = data;
+  
+    if (tgl1 == true && playing_metronome == false) {
+      playing_metronome = true;
+      playSound(false, source2);
+    }
+    else if (tgl1 == false && playing_metronome == true){
+      playSound(true, source2);
+    }
+    if (tgl2 == true && playing_song == false) {
+      playing_song = true;
+      playSound(false, source1);
+    }
+    else if (tgl2 == false && playing_song == true){
+      playSound(true, source1);
+    }
+
+    function back_press(){
+      if (playing_metronome == true){
+        playSound(true, source2);
+      }
+      if (playing_song == true){
+        playSound(true, source1);
+      }
+      navigation.navigate('Practice');
+    }
 
   return (
       <View style={styles.container}>
@@ -76,17 +143,17 @@ const TrainingMenu = () => {
             </Pressable>
           </View>
           <Pressable style={styles.back}
-                onPress={() => navigation.navigate('Practice')}>
+                onPress={() => back_press()}>
                     <Text style={styles.buttontext}>
                         Back
                     </Text>
                 </Pressable>
+          <Text style={styles.text}>
+            {JSON.stringify(tgl1)} , {JSON.stringify(tgl2)}
+          </Text>
         </ImageBackground>
         </View>
 );}
-
-      
-
 export default TrainingMenu;
 
 function round(n) {

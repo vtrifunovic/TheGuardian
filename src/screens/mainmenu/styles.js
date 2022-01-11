@@ -42,7 +42,7 @@ const Styles = StyleSheet.create({
     fontSize: 35,
     justifyContent: 'center',
     color: 'white',
-    top: 25,
+    top: 45,
     //alignItems: 'center',
     textAlign: 'center',
     width: '100%',
@@ -78,6 +78,39 @@ const Styles = StyleSheet.create({
     fontWeight: 'bold',
     textTransform: 'uppercase'
   },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+
+  modalView: {
+    margin: 5,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 25,
+    borderColor: '#ffbb00',
+    borderWidth: 5,
+    alignItems: "center",
+    shadowColor: "#ffbb00",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+  },
+
+  modalButtons: {
+    flexDirection: 'row',
+  },
+
+  modalButton: {
+    padding: 15,
+    borderRadius: 5,
+    margin: 10,
+  }
+
 });
 
 export default Styles;

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
 import {Text, View, Pressable, ImageBackground, Switch} from 'react-native';
 import Styles from './styles';
-import { useNavigation } from '@react-navigation/native';
-import { transform } from '@babel/core';
 
-
-const Practice = () => {
+const Practice = ({navigation}) => {
 
     const [toggle, setToggle] = useState(false);
     const [toggle2, setToggle2] = useState(false);
 
-    const navigation = useNavigation();
+    //const navigation = useNavigation();
 
     return (
         <View style={Styles.container}>
@@ -42,7 +39,7 @@ const Practice = () => {
                         </Switch>
                 </Pressable>
                 <Pressable style={Styles.buttons}
-                onPress={() => navigation.navigate('Practice Start')}>
+                onPress={() => navigation.navigate('Practice Start', {tgl1: toggle, tgl2: toggle2})}>
                     <Text style={Styles.buttontext}>
                         Start!
                     </Text>

@@ -1,10 +1,20 @@
 {
-  "name": "SeniorDesignCPR",
-  "displayName": "SeniorDesignCPR",
-  "android": {
-    "package": "com.SeniorDesignCPR"
+  "expo": {
+    "name": "SDCPR",
+    "slug": "SDCPR",
+    "version": "1.0.0",
+    "splash": {
+      "image": "./splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#FFFFFF"
+    },
+    "icon": "splash.png",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "android": {
+      "package": "com.TheGuardian"
+    }
   },
-  "ios": {
-    "bundleIdentifier": "com.SeniorDesignCPR"
-  }
+  "name": "SDCPR"
 }

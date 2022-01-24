@@ -21,7 +21,7 @@ const TrainingMenu = () => {
 
         <Pressable
         style={Styles.buttons}
-        onPress={() => {console.warn('CPR Menu');}}>
+        onPress={() => navigation.navigate('CPR Manual')}>
           <Text style={Styles.buttontext}>
             CPR Manual
           </Text>

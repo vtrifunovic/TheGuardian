@@ -36,7 +36,7 @@ const TrainingMenu = ({route, navigation}) => {
       }
     } else {
       try{
-        const {sound} = await Audio.Sound.createAsync(file, {downloadFirst:true});
+        const {sound} = await Audio.Sound.createAsync(file, {downloadFirst: true});
         setSound(sound);
         await sound.playAsync();
         if (file == source1){
@@ -113,6 +113,7 @@ const TrainingMenu = ({route, navigation}) => {
       if (playing_song == true){
         playSound(true, source1);
       }
+      _unsubscribe();
       navigation.navigate('Practice');
     }
 
@@ -166,6 +167,7 @@ function round(n) {
 function setValues(x, y, z, subscription) {
   if (subscription) {
     var full =  "x: " + round(x) + " y: " + round(y)+" z: " + round(z);
+    console.log(full)
     return full;
   }
   return "Accelerometer Off";

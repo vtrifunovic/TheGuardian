@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import { Text, View, Modal, FlatList, Pressable, ImageBackground} from 'react-native';
 import Styles from './styles';
+import RNImmediatePhoneCall from 'react-native-immediate-phone-call';
 import { useNavigation } from '@react-navigation/native';
 
 const MainMenu = () => {
@@ -11,6 +12,7 @@ const MainMenu = () => {
   function emergencyAccepted(){
     setModalVisible(!modalVisible);
     console.warn('911 has been called!');
+    RNImmediatePhoneCall.immediatePhoneCall('6089637875');
     navigation.navigate('Practice');
   }
 

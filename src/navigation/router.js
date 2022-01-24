@@ -5,6 +5,7 @@ import MainMenu from '../screens/mainmenu';
 import TrainingMenu from '../screens/trainingmenu';
 import Practice from '../screens/practice';
 import PracticeStart from '../screens/practicestart';
+import CPRManual from '../screens/cprmanual';
 
 
 const Stack = createNativeStackNavigator();
@@ -25,6 +26,9 @@ const Router = () => {
           <Stack.Screen 
           name={"Practice Start"}
           component={PracticeStart}/>
+          <Stack.Screen 
+          name={"CPR Manual"}
+          component={CPRManual}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

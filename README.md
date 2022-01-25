@@ -6,7 +6,7 @@ Init as react-native project, install expo and the accelerometer dependency, upl
 
 https://docs.expo.dev/bare/installing-expo-modules/
 
-#Logging Accelerometer data:
+# Logging Accelerometer data:
 `npx react-native log-android`
 
 ctrl+c to kill

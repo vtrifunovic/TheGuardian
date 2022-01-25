@@ -161,12 +161,13 @@ function round(n) {
   if (!n) {
     return 0;
   }
-  return Math.floor(n * 100) / 10;
+  //return Math.floor(n*100)/10;
+  return Math.floor(n * 1000000) / 100000;
 }
 
 function setValues(x, y, z, subscription) {
   if (subscription) {
-    var full =  "x: " + round(x) + " y: " + round(y)+" z: " + round(z);
+    let full =  "x: " + round(x) + " y: " + round(y)+" z: " + round(z);
     console.log(full)
     return full;
   }

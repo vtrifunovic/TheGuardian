@@ -11,6 +11,6 @@ https://docs.expo.dev/bare/installing-expo-modules/
 
 ctrl+c to kill
 
-`abd logcat  > log.txt`
+`adb logcat  > log.txt`
 
 pop into folder with fileclean.py, run `python3 fileclean.py` to remove unwanted log data

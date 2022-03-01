@@ -1,10 +1,11 @@
+//import statments
 import React, {useEffect} from 'react';
 import { ImageBackground, Pressable, Text, View, FlatList, ScrollView, LogBox} from 'react-native';
 import Styles from './styles';
 import { useNavigation } from '@react-navigation/native';
 
 const CPRManual = () => {
-
+    // creating const for our nav stack
   const navigation = useNavigation();
 
   // Fix the ScrollView so this error doesn't have to be supressed
@@ -18,6 +19,7 @@ const CPRManual = () => {
       style={Styles.image} 
       source={require('../mainmenu/Logo2.png')}>
           <ScrollView>
+              {/*all instructions are bound into a scroll view, copied from the red-cross's site*/}
               <View style={Styles.basicView}>
                 <View style={Styles.step}>
                     <Text style={Styles.numbers}>
@@ -99,6 +101,7 @@ const CPRManual = () => {
                     Continue giving sets of 30 chest compressions and 2 breaths. Use an AED as soon as one is available!
                     </Text>
                 </View>
+                {/*back btn to take us to training menu*/}
                 <Pressable style={Styles.back}
                 onPress={() => navigation.navigate('Training Menu')}>
                 <Text style={Styles.buttontext}>

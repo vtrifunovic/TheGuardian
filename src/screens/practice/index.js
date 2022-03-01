@@ -1,9 +1,10 @@
+//import statements
 import React, { useState } from 'react';
 import {Text, View, Pressable, ImageBackground, Switch} from 'react-native';
 import Styles from './styles';
 
 const Practice = ({navigation}) => {
-
+    // creating two state pairs for the two sounds we use 
     const [toggle, setToggle] = useState(false);
     const [toggle2, setToggle2] = useState(false);
 
@@ -14,6 +15,7 @@ const Practice = ({navigation}) => {
             <ImageBackground 
             style={Styles.image}
             source={require('../mainmenu/Logo2.png')}>
+                {/*Toggle button for determining whether user wants to have a metronome sound play*/}
                 <Pressable style={Styles.options}
                 onPress={() => setToggle(!toggle)}>
                     <Text style={Styles.switchtext}>CPR Metronome</Text> 
@@ -26,6 +28,7 @@ const Practice = ({navigation}) => {
                         value={toggle}>
                         </Switch></View>
                 </Pressable>
+                {/*Toggle button for playing verbal commands, currently uses 2077.mp3 as a placeholder*/}
                 <Pressable style={Styles.options} 
                 onPress={() => setToggle2(!toggle2)}>
                     <Text style={Styles.switchtext}>Play Verbal Commands</Text>
@@ -38,12 +41,14 @@ const Practice = ({navigation}) => {
                         >
                         </Switch>
                 </Pressable>
+                {/*btn to start the practice with values of toggle buttons being passed through as props*/}
                 <Pressable style={Styles.buttons}
                 onPress={() => navigation.navigate('Practice Start', {tgl1: toggle, tgl2: toggle2})}>
                     <Text style={Styles.buttontext}>
                         Start!
                     </Text>
                 </Pressable>
+                {/*returns us to the training menu*/}
                 <Pressable style={Styles.back}
                 onPress={() => navigation.navigate('Training Menu')}>
                     <Text style={Styles.buttontext}>

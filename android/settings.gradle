@@ -1,0 +1,14 @@
+rootProject.name = 'SDCPR'
+include ':react-native-file-log'
+project(':react-native-file-log').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-file-log/android')
+
+apply from: new File(["node", "--print", "require.resolve('@react-native-community/cli-platform-android/package.json')"].execute(null, rootDir).text.trim(), "../native_modules.gradle");
+applyNativeModulesSettingsGradle(settings)
+
+include ':app'
+
+apply from: new File(["node", "--print", "require.resolve('expo/package.json')"].execute(null, rootDir).text.trim(), "../scripts/autolinking.gradle");
+useExpoModules()
+
+include ':react-native-file-log'
+project(':react-native-file-log').projectDir = new File(rootProject.projectDir, 	'../node_modules/react-native-file-log/android')

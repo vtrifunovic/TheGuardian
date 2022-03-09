@@ -18,6 +18,12 @@ const MainMenu = () => {
     navigation.navigate('Practice');
   }
 
+  function emergencyNotAccepted(){
+    setModalVisible(!modalVisible);
+    console.warn('Skipping 911 Call!');
+    navigation.navigate('Practice');
+  }
+
   return (
     <View style={Styles.container}>
       {/* Background of group logo blurred */}
@@ -52,6 +58,14 @@ const MainMenu = () => {
                 onPress={() => emergencyAccepted()}>
                   <Text style={Styles.buttontext}>
                     Accept
+                  </Text>
+                </Pressable>
+                <Pressable
+                style={[Styles.modalButton, {backgroundColor: '#60c47b'}]}
+                onPress={() => emergencyNotAccepted()}>
+                  <Text style={Styles.buttontext}>
+                    Continue{"\n"}
+                    w/o call
                   </Text>
                 </Pressable>
                 <Pressable

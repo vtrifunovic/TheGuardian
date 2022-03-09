@@ -76,7 +76,7 @@ const Styles = StyleSheet.create({
   buttontext: {
     fontSize: 14,
     fontWeight: 'bold',
-    textTransform: 'uppercase'
+    textTransform: 'uppercase',
   },
 
   centeredView: {
@@ -90,7 +90,8 @@ const Styles = StyleSheet.create({
     margin: 5,
     backgroundColor: "white",
     borderRadius: 20,
-    padding: 25,
+    paddingVertical: 25,
+    paddingHorizontal: 7,
     borderColor: '#ffbb00',
     borderWidth: 5,
     alignItems: "center",
@@ -103,6 +104,7 @@ const Styles = StyleSheet.create({
 
   modalButtons: {
     flexDirection: 'row',
+    alignItems: 'center'
   },
 
   modalButton: {

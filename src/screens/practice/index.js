@@ -43,7 +43,14 @@ const Practice = ({navigation}) => {
                 </Pressable>
                 {/*btn to start the practice with values of toggle buttons being passed through as props*/}
                 <Pressable style={Styles.buttons}
-                onPress={() => navigation.navigate('Practice Start', {tgl1: toggle, tgl2: toggle2})}>
+                onPress={() => navigation.navigate('Practice Start', {tgl1: toggle, tgl2: toggle2, start: Date.now()})}>
+                    <Text style={Styles.buttontext}>
+                        Data Collection
+                    </Text>
+                </Pressable>
+                {/*Takes us to training start screen*/}
+                <Pressable style={Styles.buttons}
+                onPress={() => navigation.navigate('Training Start', {tgl1: toggle, tgl2: toggle2, start: Date.now()})}>
                     <Text style={Styles.buttontext}>
                         Start!
                     </Text>

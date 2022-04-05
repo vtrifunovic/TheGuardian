@@ -6,7 +6,9 @@ import MainMenu from '../screens/mainmenu';
 import TrainingMenu from '../screens/trainingmenu';
 import Practice from '../screens/practice';
 import PracticeStart from '../screens/practicestart';
+import TrainingStart from '../screens/trainingstart';
 import CPRManual from '../screens/cprmanual';
+import DataAnalysis from '../screens/dataanalysis';
 
 //creating const from the stacknavigator
 const Stack = createNativeStackNavigator();
@@ -28,10 +30,16 @@ const Router = () => {
           component={Practice}/>
           <Stack.Screen 
           name={"Practice Start"}
-          component={PracticeStart}/>
+          component={PracticeStart}/> 
+          <Stack.Screen 
+          name={"Training Start"}
+          component={TrainingStart}/>
           <Stack.Screen 
           name={"CPR Manual"}
           component={CPRManual}/>
+          <Stack.Screen 
+          name={"Data Analysis"}
+          component={DataAnalysis}/>
       </Stack.Navigator>
     </NavigationContainer>
   )

@@ -11,6 +11,9 @@ const DataAnalysis = ({route, navigation}) => {
   if (plotvals == 'a')
   {
     var {zval, tstamp} = route.params;
+    for (var x = 0; x < zval.length; x++){
+        console.log(zval[x])
+    }
     plotvals = run_analysis(zval, tstamp);
     zval = [];
     tstamp = [];

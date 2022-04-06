@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { ImageBackground, Pressable, Text, View } from 'react-native';
 import { Accelerometer } from 'expo-sensors';
 import styles from './styles';
-import { useNavigation } from '@react-navigation/native';
 
 var zvalues = [];
 var tstamps = [];
@@ -12,21 +11,7 @@ const TrainingStart = ({route, navigation}) => {
   //copying the params over from the previous page
   const {tgl1, tgl2, start} = route.params;
   tstamps[0] = start;
-  zvalues[0] = 0;
  
-    function setValues(z, subscription, start) {
-        if (subscription) {
-            zvalues.push(round(z)-9.8);
-            tstamps.push(Date.now())
-        }
-        // 60000 for 1 min
-        if (15000 < Date.now()-start)
-        { 
-            _unsubscribe;
-            navigation.navigate('Data Analysis', {zval: zvalues, tstamp : tstamps})
-        }
-        return start;
-    }
   //const navigation = useNavigation();
     // initializes our accelerometer array
     const [data, setData] = useState({
@@ -46,8 +31,21 @@ const TrainingStart = ({route, navigation}) => {
         setSubscription(
         Accelerometer.addListener(accelerometerData => {
             setData(accelerometerData);
-            Accelerometer.setUpdateInterval(10);
-        })
+            if (zvalues.length == 0)
+            {
+              zvalues.push(round(z))
+            }
+            else{
+              zvalues.push(round(z)-9.8);
+              tstamps.push(Date.now())
+            }
+            if (15000 < Date.now()-start)
+            { 
+                _unsubscribe;
+                navigation.navigate('Data Analysis', {zval: zvalues, tstamp : tstamps})
+            }
+        }),
+        Accelerometer.setUpdateInterval(2)
         );
     };
 
@@ -79,7 +77,7 @@ const TrainingStart = ({route, navigation}) => {
             Accelerometer Values:
           </Text>
           <Text style={styles.text}>
-            {setValues(z, subscription, start)}
+            Hi :3
           </Text>
           {/*btn for turning acc on and off*/}
           <View style={styles.buttonContainer}>

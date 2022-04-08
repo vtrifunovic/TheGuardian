@@ -1,8 +1,10 @@
 //import statements
-import React, { useEffect } from 'react';
-import { ImageBackground, Pressable, Text, View, ActivityIndicator} from 'react-native';
+import React from 'react';
+import { ImageBackground, Pressable, Text, View} from 'react-native';
 import Styles from './styles';
 import {complex, re, sqrt, exp, multiply, subtract} from 'mathjs';
+import { ScrollView } from 'react-native-gesture-handler';
+import styles from '../trainingstart/styles';
 
 var PI = 3.14159;
 var plotvals = 'a';
@@ -11,12 +13,13 @@ const DataAnalysis = ({route, navigation}) => {
   if (plotvals == 'a')
   {
     var {zval, tstamp} = route.params;
-    for (var x = 0; x < zval.length; x++){
-        console.log(zval[x])
-    }
     plotvals = run_analysis(zval, tstamp);
     zval = [];
     tstamp = [];
+  }
+  function back_press(){
+    plotvals = 'a';
+    navigation.navigate('Practice');
   }
   return (
     <View style={Styles.container}>
@@ -24,15 +27,20 @@ const DataAnalysis = ({route, navigation}) => {
       style={Styles.image} 
       source={require('../mainmenu/Logo2.png')}>
         {/*creating pressable to go back to main menu*/}
-        <Pressable style={Styles.back}
-        onPress={() => navigation.navigate('Main Menu')}>
-          <Text style={Styles.buttontext}>
-            Back
-          </Text>
-        </Pressable>
-        <Text style = {Styles.buttontext}>
-            {plotvals}
-        </Text>
+        <ScrollView style= {styles.scroll}>
+            <Text style = {Styles.buttontext}>
+                {plotvals}
+            </Text>
+            <Text style = {Styles.buttontext}>
+                Total compressions: {plotvals.length}
+            </Text>
+            <Pressable style={Styles.back}
+                onPress={() => back_press()}>
+                <Text style={Styles.txt}>
+                    Back
+                </Text>
+            </Pressable>
+        </ScrollView>
       </ImageBackground>
     </View>
   )
@@ -41,7 +49,16 @@ export default DataAnalysis;
 
 function run_analysis(zvalues, tstamps)
 {
+    for (var qq = 0; qq < zvalues.length; qq++)
+    {
+        if (zvalues[qq] > 10){zvalues[qq] = 10}
+        if (zvalues[qq] < -10){zvalues[qq] = -10}
+    }
     var mean = findmean(tstamps)
+
+    console.log(mean)
+    console.log(zvalues.length, tstamps.length)
+    console.log(zvalues[zvalues.length-1], tstamps[tstamps.length-1])
     var meddata = medianfilter(zvalues, zvalues.length)
     var detacc = lineardetrend(tstamps, meddata)
 
@@ -49,12 +66,12 @@ function run_analysis(zvalues, tstamps)
     // 0.5 (highband) looks VERY SEXY
     var bwdata = butterworth(detacc.length, mean, 0.5, 5, detacc)
 
-    var velocity = cumtrapz(bwdata, mean);
+    var velocity = cumtrapz(bwdata, mean+0.0015);
 
     var detvel = lineardetrend(tstamps, velocity)
 
     var medvel = medianfilter(detvel, detvel.length)
-    var distance = cumtrapz(medvel, mean);
+    var distance = cumtrapz(medvel, mean+0.0015);
 
     var absdist = [];
     for (var z = 0; z < distance.length; z++)
@@ -107,7 +124,6 @@ function run_analysis(zvalues, tstamps)
 function findmean(time_stamps)
 {
     var total = 0;
-    // WHAT THE FUCK WORK ALREADY!!!!
     for (var x = 1; x < time_stamps.length; x++)
     {
         total += time_stamps[x] - time_stamps[x-1];
@@ -164,7 +180,7 @@ function lineardetrend(values_x, values_y)
     var totval = values_y.length;
     for (var j = 0; j < totval; j++)
     {
-        values_y[j] = values_y[j]// - (trend[1][j]);
+        values_y[j] = values_y[j] + (trend[1][j]);
     }
     return values_y;
 }

@@ -19,17 +19,17 @@ const Styles = StyleSheet.create({
   },
 
   back: {
-    height: 40,
+    height: 45,
     borderRadius: 15,
-    width: '25%',
-    position: 'absolute',
-    bottom: 80,
+    margin: 20,
+    width: '50%',
     backgroundColor: 'white',
     shadowColor: 'white',
     shadowOffset: {width: 5, height: 5},
     shadowRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignSelf: 'center'
   },
   
   image: {
@@ -37,7 +37,8 @@ const Styles = StyleSheet.create({
     height: Dimensions.get('window').height,
     resizeMode: 'cover',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    margin: 20,
   },
 
   buttons:{
@@ -48,13 +49,27 @@ const Styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#5070A1',
     zIndex: 100,
-    margin: 15,
   },
 
   buttontext: {
-    fontSize: 12,
+    fontSize: 16,
+    paddingTop: 40,
+    paddingHorizontal: 50,
     fontWeight: 'bold',
     color: 'white',
+    justifyContent: 'center',
+    textTransform: 'uppercase',
+  },
+
+  scroll: {
+    width: '100%',
+    paddingTop: 50,
+  },
+
+  txt: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: 'black',
     justifyContent: 'center',
     textTransform: 'uppercase',
   },

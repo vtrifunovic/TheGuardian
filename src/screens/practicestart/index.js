@@ -189,7 +189,7 @@ function round(n) {
 function setValues(x, y, z, subscription) {
   if (subscription) {
     let full =  "x: " + round(x) + " y: " + round(y)+" z: " + round(z);
-    //console.log(full)
+    console.log(round(z) + " " + Date.now())
     return full;
   }
   return "Accelerometer Off";

@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'white',
     margin: 10,
+    paddingBottom: 30,
   },
 
   image: {

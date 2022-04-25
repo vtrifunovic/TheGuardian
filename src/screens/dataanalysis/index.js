@@ -13,13 +13,19 @@ const DataAnalysis = ({route, navigation}) => {
   if (plotvals == 'a')
   {
     var {zval, tstamp} = route.params;
-    plotvals = run_analysis(zval, tstamp);
+    //plotvals = run_analysis(zval, tstamp);
+    plotvals = 'b'
     zval = [];
     tstamp = [];
   }
   function back_press(){
     plotvals = 'a';
     navigation.navigate('Practice');
+  }
+  function log_me(){
+      for (var ga = 0; ga < plotvals.length; ga++){
+          console.log(plotvals[ga]);
+      }
   }
   return (
     <View style={Styles.container}>
@@ -35,6 +41,12 @@ const DataAnalysis = ({route, navigation}) => {
                 Total compressions: {plotvals.length}
             </Text>
             <Pressable style={Styles.back}
+                onPress={() => log_me()}>
+                <Text style={Styles.txt}>
+                    Log
+                </Text>
+            </Pressable>
+            <Pressable style={Styles.back}
                 onPress={() => back_press()}>
                 <Text style={Styles.txt}>
                     Back
@@ -49,29 +61,28 @@ export default DataAnalysis;
 
 function run_analysis(zvalues, tstamps)
 {
-    for (var qq = 0; qq < zvalues.length; qq++)
-    {
-        if (zvalues[qq] > 10){zvalues[qq] = 10}
-        if (zvalues[qq] < -10){zvalues[qq] = -10}
-    }
     var mean = findmean(tstamps)
-
-    console.log(mean)
-    console.log(zvalues.length, tstamps.length)
-    console.log(zvalues[zvalues.length-1], tstamps[tstamps.length-1])
+    var perror = -(mean-0.005)/0.005;
+    var m_new = mean*perror;
+    var m_fix2 = mean+m_new/2;
+    for (var gg = 0; gg < zvalues.length; gg++){
+        //console.log("Z: " +zvalues[gg] + " T: "+tstamps[gg])
+        if (gg != 0)
+        {
+            zvalues[gg] = zvalues[gg] - 9.8;
+        }
+    }
     var meddata = medianfilter(zvalues, zvalues.length)
     var detacc = lineardetrend(tstamps, meddata)
+    
+    var bwdata = butterworth(detacc.length, m_fix2, 0.5, 5, detacc)
 
-    // > 0.1(highband) makes litte difference to BW
-    // 0.5 (highband) looks VERY SEXY
-    var bwdata = butterworth(detacc.length, mean, 0.5, 5, detacc)
-
-    var velocity = cumtrapz(bwdata, mean+0.0015);
+    var velocity = cumtrapz(bwdata, m_fix2);
 
     var detvel = lineardetrend(tstamps, velocity)
 
     var medvel = medianfilter(detvel, detvel.length)
-    var distance = cumtrapz(medvel, mean+0.0015);
+    var distance = cumtrapz(medvel, m_fix2);
 
     var absdist = [];
     for (var z = 0; z < distance.length; z++)
@@ -84,6 +95,7 @@ function run_analysis(zvalues, tstamps)
     for (var z = 0; z < pks.length; z++)
     {
         allpks.push(abs(pks[z][0]*39.37))
+        console.log(pks[z][1])
     }
 
     var mypks = truedist(allpks, tstamps);
@@ -93,7 +105,7 @@ function run_analysis(zvalues, tstamps)
         var retarray = [];
         for (var h = 0; h < array.length-1; h++)
         {
-            retarray[h] = (abs(array[h+1]) + abs(array[h]))/2 + "\n";
+            retarray[h] = (abs(array[h+1]) + abs(array[h]))/2+"\n";
         }
         return retarray;
     }
@@ -107,16 +119,6 @@ function run_analysis(zvalues, tstamps)
         else{
             return -val;
         }
-    }
-
-    function average(val)
-    {
-        var total = 0;
-        for (var i = 0; i < val.length; i++)
-        {
-            total += val[i];
-        }
-        return total/val.length
     }
     return mypks;
 }

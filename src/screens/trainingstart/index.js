@@ -14,9 +14,11 @@ var inc2 = 0;
 var inc3 = 0;
 const source1 = require('./deeper.mp3');
 const source2 = require('./good.mp3');
+const source3 = require('../practicestart/metronome.mp3')
 var PI = 3.14159;
 var xsound = undefined;
 var ysound = undefined;
+var zsound = undefined;
 var stall = false;
 const TrainingStart = ({route, navigation}) => {  
   //copying the params over from the previous page
@@ -25,6 +27,8 @@ const TrainingStart = ({route, navigation}) => {
   async function remove_sound(){
     await ysound.unloadAsync();
     await xsound.unloadAsync();
+    await zsound.stopAsync();
+    await zsound.unloadAsync();
   }
 
   async function load_sound(file){
@@ -33,10 +37,16 @@ const TrainingStart = ({route, navigation}) => {
       setSound(sound);
       ysound = sound;
     }
-    else{
+    else if (file == source2){
       const {sound} = await Audio.Sound.createAsync(file);
       setSound(sound);
       xsound = sound;
+    }
+    else{
+        const {sound} = await Audio.Sound.createAsync(file);
+        setSound(sound);
+        zsound = sound;
+        await zsound.playAsync()
     }
   }
 
@@ -47,6 +57,12 @@ const TrainingStart = ({route, navigation}) => {
       } catch (e){
         console.log(e)
       }
+    }
+    else if (pkavg == 0){
+        return;
+    }
+    else if (isNaN(pkavg)){
+        return;
     }
     else{
       try{
@@ -77,7 +93,7 @@ const TrainingStart = ({route, navigation}) => {
             setData(accelerometerData);
         }),
         // 0.05 LOG
-        Accelerometer.setUpdateInterval(1)
+        Accelerometer.setUpdateInterval(2)
         );
         zvalues = [];
         tstamps = [];
@@ -89,13 +105,14 @@ const TrainingStart = ({route, navigation}) => {
         console.log("Started!")
         load_sound(source1);
         load_sound(source2);
+        load_sound(source3);
     };
 
     const _newsubscribe = () => {
       setSubscription(
         Accelerometer.addListener(accelerometerData => { setData(accelerometerData);
         }),
-        Accelerometer.setUpdateInterval(1)
+        Accelerometer.setUpdateInterval(2)
       );
     };
     const _newsubscribe2 = () => {
@@ -121,49 +138,48 @@ const TrainingStart = ({route, navigation}) => {
 
     if (zvalues.length == 0 && subscription && idx == 0 && stall == false)
     {
-      zvalues.push(round(z))
+      zvalues.push(0)
       tstamps[0] = Date.now();
     }
     else if (subscription && idx == 0 && stall == false){
       zvalues.push(round(z));
       tstamps.push(Date.now())
     }
-    if (inc3+1000 < Date.now()-start && idx == 0 & stall == false){
+    if (inc3+1010 < Date.now()-start && idx == 0 & stall == false){
         _unsubscribe();
         _newsubscribe();
-        inc3 += 1001;    
+        inc3 += 1000;
     }
-    if (inc+4000 < Date.now()-start && idx == 0 && stall == false)
+    if (inc+3300 < Date.now()-start && idx == 0 && stall == false) //was 4200 --> 3300
     {
         _unsubscribe();
         _newsubscribe2();
-        inc += 5000;
-        stall = true;
+        inc += 4000; // was 5000
     }
-    else if (inc2+5000 < Date.now()-start && idx == 0)
+    else if (inc2+4000 < Date.now()-start && idx == 0) // was 5000 --> 4000
     {
       _unsubscribe();
-      inc2 += 5000;
       var pkavg = run_analysis(zvalues, tstamps);
       console.log(pkavg)
       play_sound(pkavg);
-      zvalues = [];
+      zvalues = [];1000
       tstamps = [];
-      stall = false;
       _newsubscribe();
+      inc2 += 4000;
     }
 
     // 60000 == 60 sec
-    if (60000 < Date.now()-start && idx == 0)
+    if (61000 < Date.now()-start && idx == 0)
     {
         _unsubscribe();
         idx++;
         remove_sound();
-        navigation.navigate('Data Analysis', {zval: zvalues, tstamp : tstamps})
+        navigation.navigate('Practice')
     }
     // with the previous checks this kills our audio and navigates us back to the practice screen
     function back_press(){
       _unsubscribe();
+      remove_sound();
       navigation.navigate('Practice');
     }
 
@@ -201,23 +217,53 @@ function round(n) {
 
 function run_analysis(zvalues, tstamps)
 {
-    //var sttart = Date.now()
-    var mean = findmean(tstamps)
-    var perror = -(mean-0.005)/0.005;
-    var m_new = mean*perror;
-    var m_fix2 = mean+m_new/2;
-    for (var gg = 0; gg < zvalues.length; gg++){
-        //console.log("Z: " +zvalues[gg] + " T: "+tstamps[gg])
-        if (gg != 0)
-        {
-            zvalues[gg] = zvalues[gg] - 9.8;
-        }
+    for (var gg = 1; gg < zvalues.length; gg++){
+        zvalues[gg] = zvalues[gg] - 9.8;
     }
+    /*
+    var nz = finddupes(zvalues);
+    var nt = return_something(tstamps, nz)
+    zvalues = []; 
+    tstamps = [];
+    zvalues = nz;
+    tstamps = nt;
+    console.log(zvalues.length, tstamps.length)
+    */
+    var mean = findmean(tstamps)
+    //console.log("Mean: " + mean)
+    var perror = -(mean-0.0047)/0.0045;
+    var m_new = mean*perror;
+    var m_fix2 = mean+m_new;
+    //console.log("Mfix: " + m_fix2)
+    /*
+    if (zvalues[1]==zvalues[2] && zvalues[3]==zvalues[4]){
+        var lenz = zvalues.length
+        zvalues = finddupes(zvalues, lenz)
+        tstamps = finddupes(tstamps, lenz)
+        var mean = findmean(tstamps)
+        var perror = -(mean-0.005)/0.005;
+        var m_new = mean*perror;
+        var m_fix2 = mean+m_new/2;
+        console.log("Mfix (fixed): " + m_fix2)
+    }
+    if (zvalues[2]==zvalues[3] && zvalues[4]==zvalues[5]){
+        var lenz = zvalues.length
+        zvalues = finddupes(zvalues, lenz)
+        tstamps = finddupes(tstamps, lenz)
+        var mean = findmean(tstamps)
+        var perror = -(mean-0.005)/0.005;
+        var m_new = mean*perror;
+        var m_fix2 = mean+m_new/2;
+        console.log("Mfix (fixed2): " + m_fix2)
+    }
+    */
     var meddata = medianfilter(zvalues, zvalues.length)
     var detacc = lineardetrend(tstamps, meddata)
-    
+    if (isNaN(detacc[1])){
+        detacc = [];
+        detacc = zvalues;
+    }
     var bwdata = butterworth(detacc.length, m_fix2, 0.5, 5, detacc)
-
     var velocity = cumtrapz(bwdata, m_fix2);
 
     var detvel = lineardetrend(tstamps, velocity)
@@ -261,15 +307,44 @@ function run_analysis(zvalues, tstamps)
         }
     }
     var finalavg = 0;
-    for (var u = 1; u < mypks.length; u++){
-      finalavg += mypks[u];
-      //console.log(mypks[u]);
+    if (mypks.length < 3){
+        for (var u = 1; u < mypks.length; u++){
+            finalavg += mypks[u];
+          }
+        return finalavg/(mypks.length-1);
     }
-    finalavg = finalavg/(mypks.length);
-    //console.log((Date.now()-sttart)/1000)
+    for (var u = 2; u < mypks.length; u++){
+      finalavg += mypks[u];
+    }
+    finalavg = finalavg/(mypks.length-2);
+    if (isNaN(finalavg) || finalavg == 0){
+        return 0;
+    }
     return finalavg;
 }
+/*
+function return_something(time, values){
+    var newtime = [];
+    for (var th = 0; th < values.length; th++){
+        newtime.push(time[th])
+    }
+    return newtime
+}
 
+function finddupes(values){
+    var nodupes = [];
+    var pastvalue = 0;
+    for (var l = 1; l < values.length; l++){
+        if (values[l] != pastvalue){
+            if (values[l] != undefined){
+                nodupes.push(values[l])
+            }
+        }
+        pastvalue = values[l];
+    }
+    return nodupes;
+}
+*/
 function findmean(time_stamps)
 {
     var total = 0;
@@ -362,7 +437,6 @@ function findLineByLeastSquares(values_x, values_y) {
         sum_xy += x*y;
         count++;
     }
-
     var m = (count*sum_xy - sum_x*sum_y) / (count*sum_xx - sum_x*sum_x);
     var b = (sum_y/count) - (m*sum_x)/count;
 

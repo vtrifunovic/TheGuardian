@@ -23,7 +23,7 @@ Home Screen & pop up for emergency calling feature
     <img src="/screenshots/Screenshot_20220524-144843_SDCPR.jpg" width="300px"</img> 
 </div>
 
-When training mode is pressed the screen on the right is shown. If "how to use app" is selected, screen on the right is shown.
+When training mode is pressed the screen on the left is shown. If "how to use app" is selected, screen on the right is shown.
 
 <div align="left">
     <img src="/screenshots/Screenshot_20220524-144857_SDCPR.jpg" width="300px"</img> 
